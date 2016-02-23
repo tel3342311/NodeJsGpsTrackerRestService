@@ -6,10 +6,10 @@
    	"start": "node app.js"
   },
  "dependencies": {
-    "ibm_db":"0.0.8"
+    "ibm_db":"0.0.19"
     },
     "engines": {
-    "node": "0.10.26"
+    "node": "0.12.7"
     },
     "repository": {}
 }
