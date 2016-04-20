@@ -22,6 +22,7 @@ function isFunction(functionToCheck) {
 	 return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
 }
 
+
 // This function gets the location according to the device ID out of the DB
 function getDeviceLocation(deviceId, callbackFunction)
 {
@@ -106,15 +107,36 @@ HTTPServer.prototype.listen = function () {
 					}
 					else
 					{
-						response.writeHeader(200, {"Content-Type": "text/html"});
-						response.write("<title>GPS Tracker - Location</title>");
-						response.write("<h1>Last registered location of your device</h1>");
-						response.write("<p>Device ID: " + data[0].DEVICEID + "</p>");
-						response.write("<p>Latitude: " + data[0].LATITUDE + "</p>");
-						response.write("<p>Longitude: " + data[0].LONGITUDE + "</p><br>");
-						response.write("<a href=\"http://maps.google.com/?q=" + data[0].LATITUDE + "," + data[0].LONGITUDE + "\" target=\"_blank\">See the location on Google Maps</a>")
-						response.end();
 						
+						fs.readFile("./output.html", function(err, htmData)
+								{
+									if (err)
+									{
+										response.writeHeader(404, {"Content-Type": "text/html"});
+										response.write("<title>ERROR - GPS Tracker</title>");
+										response.write("<h1>Uups, something went wrong</h1>");
+										response.write("<p>" + err.toString() + "</p>");
+									}
+									else
+									{
+										//TODO pass data 
+//										response.writeHeader(200, {"Content-Type": "text/html"});
+//										var lat = queryData.latitude;
+//										var lon = queryData.longitude;
+//										response.render(htmData, { layout: false, lat:lat, lon:lon});
+//										response.end();
+										
+										response.writeHeader(200, {"Content-Type": "text/html"});
+										response.write("<title>GPS Tracker - Location</title>");
+										response.write("<h1>Last registered location of your device</h1>");
+										response.write("<p>Device ID: " + data[0].DEVICEID + "</p>");
+										response.write("<p>Latitude: " + data[0].LATITUDE + "</p>");
+										response.write("<p>Longitude: " + data[0].LONGITUDE + "</p><br>");
+										response.write("<a href=\"http://maps.google.com/?q=" + data[0].LATITUDE + "," + data[0].LONGITUDE + "\" target=\"_blank\">See the location on Google Maps</a>")
+										response.end();
+
+									}
+								});
 						consoleCallback("The following DDL-Statement was successfully ran against the db2: \"SELECT * FROM DEVICE WHERE DEVICEID='" + queryData.deviceid + "';\"");
 					}
 				});
@@ -175,5 +197,6 @@ HTTPServer.prototype.listen = function () {
 		consoleCallback(ex);
 	}
 };
+
 
 module.exports = HTTPServer;
